@@ -79,18 +79,14 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
+      var board = this.rows();
       var total = 0; 
-      for (var x = 0; x < rowIndex.length; x += 1) {
-        if (rowIndex[x]) {
+      for (var x = 0; x < board.length; x += 1) {
+        if (board[rowIndex][x] === 1) {
           total += 1; 
         }
       }
       return (total > 1); 
-      
-      // var total = rowIndex.reduce(function(sum, element) {
-      //   return sum + element;
-      // });
-      // return (total > 1); 
     },
 
     // test if any rows on this board contain conflicts
@@ -99,15 +95,12 @@
       var collision = false;
       
       for (var i = 0; i < board.length; i++) {
-        if (this.hasRowConflictAt(board[i])) {
+        if (this.hasRowConflictAt(i)) {
           collision = true;
         }
       }
       
       return collision;
-      // return board.every(function(row) {
-      //   return !this.hasRowConflictAt(row);
-      // });
     },
 
 
@@ -120,14 +113,11 @@
       var board = this.rows();
       var tally = 0;
       
-      // var has 1
-      
       for (var i = 0; i < board.length; i++) {
         if (board[i][colIndex] === 1) {
           tally++;
         }
       }
-      
       return (tally > 1);
     },
 
@@ -162,7 +152,7 @@
           }
         }
       } else if (index === 0) {
-        for (let i = 0; i < (board.length - 1); i += 1){
+        for (let i = 0; i < (board.length - 1); i += 1) {
           if (board[i][i] === 1) {
             tally += 1; 
           }
@@ -188,7 +178,6 @@
         }
       }
       return collision; 
-
     },
 
 
@@ -221,7 +210,6 @@
           }
         }
       }
-      
       return (tally > 1); 
     },
 
