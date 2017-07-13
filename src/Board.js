@@ -79,12 +79,35 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      var total = 0; 
+      for (var x = 0; x < rowIndex.length; x += 1) {
+        if (rowIndex[x]) {
+          total += 1; 
+        }
+      }
+      return (total > 1); 
+      
+      // var total = rowIndex.reduce(function(sum, element) {
+      //   return sum + element;
+      // });
+      // return (total > 1); 
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      var board = this.rows();
+      var collision = false;
+      
+      for (var i = 0; i < board.length; i++) {
+        if (this.hasRowConflictAt(board[i])) {
+          collision = true;
+        }
+      }
+      
+      return collision;
+      // return board.every(function(row) {
+      //   return !this.hasRowConflictAt(row);
+      // });
     },
 
 
@@ -94,12 +117,31 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var board = this.rows();
+      var tally = 0;
+      
+      // var has 1
+      
+      for (var i = 0; i < board.length; i++) {
+        if (board[i][colIndex] === 1) {
+          tally++;
+        }
+      }
+      
+      return (tally > 1);
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      var board = this.rows();
+      var collision = false;
+      
+      for (var j = 0; j < board.length; j++) {
+        if (this.hasColConflictAt(j)) {
+          collision = true;
+        }
+      }
+      return collision;
     },
 
 
@@ -109,7 +151,9 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      
+    
+    
     },
 
     // test if any major diagonals on this board contain conflicts
