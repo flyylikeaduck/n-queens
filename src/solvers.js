@@ -51,27 +51,36 @@
     var solution = new Board({n: n}); 
     var board = solution.rows(); 
     var solutionCount = 0;
+    debugger;
     
-    var recurse = function(row) {
-      
-      for (let i = 0; i < n; i++) {
-        board[row][i] = 1;
-        if (solution.hasRowConflictAt(row) || solution.hasColConflictAt(i)) {
-          solution.togglePiece(row, i); 
-        } 
-      }
-      
-      
-      
+   
+    // need to increase the solution count every time we decide to keep the 
+    var recurse = function(row, counter) {
       if (row === 0) {
-        //escape
+        if (counter === n) {
+          solutionCount++; 
+        } 
+        return; 
       } else {
-        recurse(row - 1); 
+        for (let i = 0; i < n; i++) {
+          board[row][i] = 1;
+          counter++;   
+
+          if (solution.hasRowConflictAt(row) || solution.hasColConflictAt(i)) {
+            solution.togglePiece(row, i);  // removing the 1
+            counter--;
+          } else {
+            recurse(row - 1, counter); 
+          }
+        }
       }
     }; 
     
-    recurse(n); 
-    
+    if (n === 0 || n === 1) {
+      solutionCount++;
+    } else {
+      recurse(n, 0); 
+    }
     
     
     console.log('Number of solutions for ' + n + ' rooks:', solutionCount);  
