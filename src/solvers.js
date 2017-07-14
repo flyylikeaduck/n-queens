@@ -65,7 +65,7 @@
       
       for (var x = 0; x < n; x += 1) {
         board.togglePiece(row, x); 
-        if (!board.hasAnyRooksConflicts()) {
+        if (!board.hasColConflictAt(x)) {
           traverse(row + 1); 
         }
         board.togglePiece(row, x); 
@@ -74,66 +74,110 @@
     traverse(0); 
     return solutionCount; 
     
-    // var solution = new Board({n: n}); 
-    // var solutionCount = 0;
-    // debugger;
-    
-   
-    // // need to increase the solution count every time we decide to keep the 
-    // var recurse = function(row, counter) {
-    //   if (row === 0) {
-    //     if (counter === n) {
-    //       solutionCount++; 
-    //     } 
-    //     return; 
-    //   } 
-      
-    //   for (let i = 0; i < n; i++) {
-    //     solution.togglePiece(row - 1, i);
-    //     counter++;   
-
-    //     if (solution.hasAnyRooksConflicts()) {
-    //       solution.togglePiece(row - 1, i);  // removing the 1
-    //       counter--;
-    //     } else {
-    //       recurse(row - 1, counter); 
-    //     }
-        
-    //   }
-      
-    // }; 
-    
-    // if (n === 0 || n === 1) {
-    //   solutionCount++;
-    // } else {
-    //   recurse(n, 0); 
-    // }
-    // for (var x = 0; x < n; x++) {
-    //   solution.togglePiece(n - 1, x); 
-    // }
-    //solution.hasRowConflictAt(row - 1) || solution.hasColConflictAt(i)
-    
     console.log('Number of solutions for ' + n + ' rooks:', solutionCount);  
     return solutionCount;
   };
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
   window.findNQueensSolution = function(n) {
-    var board = makeEmptyMatrix(n); 
+    var board = new Board({n: n});
+    debugger;
     
-    var traverse = function() {
+    if (n === 0) {
+      return [];
+    }
+    if (n === 1) {
+      return [[1]];
+    }
+    
+    if (n < 4) {
+      return board;
+    }
+
+    // traversing all the rows
+      // can only be one queen on each row
+      // check col and diagonals
+    
+    var traverse = function(row, col) {
       
+      if (row === n) {
+        return board;
+      }
+      
+      for (let i = col; i < n; i++) {
+        // change the 0 to 1
+        board.togglePiece(row, i);
+        // is there conflict at column or diagonal? 
+        if (!board.hasAnyQueenConflictsOn(row, i)) {
+         // if there is no conflict
+          // recurse over the next row
+          traverse(row + 1, col, queenCount++);
+        } 
+        // toggle piece back to 0 (and keep iterating over columns)  
+        board.togglePiece(row, i);    
+        
+          // i found something stop 
+            // or i didn't find something keep going
+      }
     }; 
     
+    while (row !== n) {
+      
+    }
+    traverse(0, 0, 0);
     
-    console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-    return solution; 
+    console.log('Single solution for ' + n + ' queens:', JSON.stringify(board));
+    return board; 
   };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
   window.countNQueensSolutions = function(n) {
-    var solutionCount = undefined; //fixme
+    var solutionCount = 0; 
+    var board = new Board({n: n});
+    debugger;
+    
+    // edge cases
+    if (n <= 1) {
+      return 1;
+    }
+    if (n < 4) {
+      return solutionCount;
+    }
+    
+    var traverse = function(row, col, queenCount) {
+      
+      if (row === n) {
+        solutionCount++;
+        return;
+      }
+      
+      for (let i = col; i < n; i++) {
+        // change the 0 to 1
+        board.togglePiece(row, i);
+        // is there conflict at column or diagonal? 
+        if (!board.hasAnyQueenConflictsOn(row, i)) {
+         // if there is no conflict
+          // recurse over the next row
+          traverse(row++, col++, queenCount++);
+        } else if (i === n-1) {
+          traverse(row++, col++, queenCount);
+        }
+        // toggle piece back to 0 (and keep iterating over columns)  
+        board.togglePiece(row, i);  
+        
+        // edge if 
+        while(row > queenCount) {
+          traverse(row--, col++, queenCount);
+        }
 
+      }
+      
+      
+    }; 
+  
+    traverse(0, 0, 0);
+    
+    
     console.log('Number of solutions for ' + n + ' queens:', solutionCount);  
     return solutionCount;
   };
